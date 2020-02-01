@@ -5,7 +5,6 @@ You can find the most recent version of this guide [here](https://github.com/fac
 
 And React-MD [here](https://react-md.mlaursen.com/getting-started/installation).
  
-`git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/hskindoor_ted`
  
  ```yarn config set sass-binary-site https://github.com/sass/node-sass```
 
