@@ -1,0 +1,11 @@
+node_modules/
+public/thumbnail/*
+
+.sonarlint/
+.vscode/
+
+yarn.lock
+package-lock.json
+testjwt.js
+test.js
+ 

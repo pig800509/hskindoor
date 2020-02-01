@@ -1,0 +1,26 @@
+@import url("buttons.dataTables.min.css");
+@import url("editor.dataTables.min.css");
+@import url("jquery.dataTables.min.css");
+@import url("select.dataTables.min.css");
+@import url("fontawesome.css");
+
+button.btn {
+	background-color: #008CBA; /* blue */
+    border: none;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+}
+.btn:hover { background-color: #007ea8; }
+
+button.btn-red { background-color: #f44336; }
+button.btn-red:hover{ background-color: #660000; }
+
+button.btn-green { background-color: #4CAF50; }
+button.btn-green:hover { background-color: #208023; }

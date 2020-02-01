@@ -1,0 +1,81 @@
+@import 'globals';
+
+$md-light-theme: false;
+$md-primary-color: $md-teal-500;
+$md-secondary-color: $md-deep-orange-a-200;
+
+@include react-md-everything;
+
+// Or for a subsection
+@include react-md-theme-everything($md-teal-500, $md-deep-orange-a-200, $md-light-theme, 'custom-theme');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+button {
+  $md-btn-include-flat: true !default;
+}
+
+#simple-full-page-dialog {
+  overflow: hidden;
+}
+
+@keyframes send-mail-animation {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  40% {
+    transform: translate3d(150px, -40px, 0);
+  }
+
+  80% {
+    transform: translate3d(290px, 0, 0);
+  }
+
+  85% {
+    transform: translate3d(295px, -3px, 0);
+  }
+
+  92% {
+    transform: translate3d(303px, 0, 0);
+  }
+
+  96% {
+    transform: translate3d(310px, -1px, 0);
+  }
+
+  100% {
+    transform: translate3d(315px, 0, 0);
+  }
+}
+
+.md-btn.drawers__routing__send-btn {
+  display: block;
+  margin-bottom: 4em;
+}
+
+.drawers__routing__send-icon {
+  &.md-icon.md-icon {
+    font-size: 40px;
+  }
+
+  &--active {
+    animation-duration: 3s;
+    animation-iteration-count: 1;
+    animation-name: send-mail-animation;
+    animation-timing-function: linear;
+  }
+}
+
+.text-fields__contacts {
+  padding: $md-default-padding;
+}
+
+.text-fields__contact-chip:nth-child(n + 2) {
+  display: block;
+  margin-top: $md-default-padding / 2;
+}
