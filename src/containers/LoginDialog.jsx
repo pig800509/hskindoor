@@ -1,10 +1,8 @@
-import React, { PureComponent } from 'react';
-
-import * as d3 from 'd3';
+import React, { Component } from 'react';
+//import { Link } from "react-router-dom";
 import {
   DialogContainer,
-  TextField,
-  CircularProgress
+  TextField
 } from 'react-md';
 
 import {
@@ -13,16 +11,18 @@ import {
   CognitoUser
 } from "amazon-cognito-identity-js";
 
-import { getIdentityNum } from "../libs/awsLib";
-import config from "../config/user_config"; //userconfig
+import Home from "./Home"
+import userconfig from "../config/user_config";
+import adminconfig from "../config/admin_config"
 
+var config = userconfig ;
 
-export default class LoginDialog extends PureComponent {
+export default class LoginDialog extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      visible: false,
+      visible: true,
       focusOnMount: true,
       containFocus: true,
       initialFocus: undefined,
@@ -31,47 +31,16 @@ export default class LoginDialog extends PureComponent {
       password: "",
       disable:false
     };
-  }
-
-  componentDidMount(){
-    var i = 0;
-    var svg = d3.select(this.background);
-    const showdialog = this.show;
-
-    setTimeout(() => {
-      showdialog();
-      repeat();
-    }, 100);
-
-    function repeat() {
-        svg.insert("circle")
-          .attr("cx", window.innerWidth/2)
-          .attr("cy", window.innerHeight/2)
-          .attr("r", 1e-6)
-          .attr("fill",d3.hsl((i = (i + 51) % 360), 0.2, .15))
-          .style("stroke", d3.hsl(i % 360, 1, .5))
-          .style("stroke-width",70)
-          .style("stroke-opacity", 10)
-        .transition()
-          .duration(3000)
-          .attr("r", window.innerWidth+window.innerHeight/2)
-          .style("stroke-opacity", 1e-6)
-          .style("stroke-width",2)
-          .on("end", repeat)
-          .remove();
-        d3.select("rect")
-          .transition()
-          .delay(3000)
-          .duration(0)
-          .attr("fill",d3.hsl(i % 360, 0.2, .15))
+    //console.log (this.props.ltype);
+    if(this.props.ltype===2) {
+      config = adminconfig;
+    }
+    else{
+      config = userconfig;
     }
   }
 
-  componentWillUnMount(){
-    clearTimeout(this.componentDidMount);
-  }
-
-  login(email, password) {
+    login(email, password) {
     const userPool = new CognitoUserPool({
       UserPoolId: config.cognito.USER_POOL_ID,
       ClientId: config.cognito.APP_CLIENT_ID
@@ -95,17 +64,15 @@ export default class LoginDialog extends PureComponent {
 
       try {
         await this.login(this.state.email, this.state.password);
-        this.props.userHasAuthenticated(true,getIdentityNum());
+        this.props.userHasAuthenticated(true,this.props.ltype);
+
       } catch (e) {
         alert(e);
         this.setState({ isLoading: false });
       }
     }
 
-  show = () => {
-    this.setState({ visible: true });
-  };
-
+  
   hide = () => {
     this.setState({ visible: false });
   };
@@ -134,49 +101,55 @@ export default class LoginDialog extends PureComponent {
   }
 
   toSignup =() => {
-    this.props.history.push("/signup");
+    this.props.history.push("/usersignup");
   }
 
   render() {
-    console.log(this.props.identity+"  "+this.props.isAuthenticated);
     const { visible, initialFocus, focusOnMount, containFocus } = this.state;
-    //let user_action;
-    const user_action = [{
+    let user_action;
+    if(this.props.ltype===1) {
+    user_action = [{
+        id: 'dialog-signup',
+        primary: true,
+        children: 'Sign Up',
+        onClick: this.toSignup
+      },{
         id: 'dialog-signin',
+        primary: true,
         children: 'Sign in',
         onClick: this.handleSubmit,
         disabled: this.validateForm()
       }];
-
+    }
+    else {
+      user_action = [{
+        id: 'dialog-signin',
+        primary: true,
+        children: 'Sign in',
+        onClick: this.handleSubmit,
+        disabled: this.validateForm()
+      }];
+    }
     return (
       <div>
-        <div className="video-background">
-          <svg ref={background => this.background = background} width={"100%"} height={"100%"}>
-            <rect width={"100%"} height={"100%"}/>
-          </svg> 
-        </div>
-          <DialogContainer
-            id="login-dialog"
-            title={!this.props.isAuthenticating?"Login~":"Loading..."}
-            visible={visible}
-            modal
-            stackedActions
-            actions= {!this.props.isAuthenticating?user_action:{}}
-            onHide={this.hide}
-            initialFocus={initialFocus}
-            focusOnMount={focusOnMount}
-            containFocus={containFocus}
-            contentClassName="md-grid"
-          >
-          {this.props.isAuthenticating?<CircularProgress id="loginload"/>:
-            <div style={{width:"100%"}}>
-              <TextField id="email" label="Email:" type="text" placeholder="email" className="md-cell md-cell--12" value={this.state.email}
-                onChange={this.handleChange}/>
-              <TextField id="password" label="Password:" placeholder="pass" className="md-cell md-cell--12" value={this.state.password}
-                onChange={this.handleChange}/>
-            </div>
-          }
-          </DialogContainer>
+        <Home />
+        <DialogContainer
+          id="login-dialog"
+          title="Login~"
+          visible={visible}
+          modal
+          actions= {user_action}
+          onHide={this.hide}
+          initialFocus={initialFocus}
+          focusOnMount={focusOnMount}
+          containFocus={containFocus}
+          contentClassName="md-grid"
+        >
+          <TextField id="email" label="Email:" type="email" placeholder="email" className="md-cell md-cell--12" value={this.state.email}
+              onChange={this.handleChange}/>
+          <TextField id="password" label="Password:" placeholder="pass" className="md-cell md-cell--12" value={this.state.password}
+              onChange={this.handleChange}/>
+        </DialogContainer>
       </div>
     );
   }
