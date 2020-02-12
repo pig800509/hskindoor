@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 This is React web used for monitoring and controlling people indoor position.
 
+=======
+>>>>>>> parent of d39a18e... Update md
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
